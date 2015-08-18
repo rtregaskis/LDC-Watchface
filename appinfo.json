@@ -1,0 +1,31 @@
+{
+    "appKeys": {
+        "KEY_CONDITIONS": 1,
+        "KEY_TEMPERATURE": 0
+    },
+    "capabilities": [
+        "location"
+    ],
+    "companyName": "lokidokicoki@gmail.com",
+    "longName": "LDC-Watchface",
+    "projectType": "native",
+    "resources": {
+        "media": [
+            {
+                "file": "images/bt-icon.png",
+                "name": "IMAGE_BT_ICON",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "LDC-Watchface",
+    "targetPlatforms": [
+        "basalt"
+    ],
+    "uuid": "5d805480-2054-44ec-80ce-015f852bbf8b",
+    "versionLabel": "1.0",
+    "watchapp": {
+        "watchface": true
+    }
+}
