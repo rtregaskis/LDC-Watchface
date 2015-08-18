@@ -7,7 +7,7 @@
         "location"
     ],
     "companyName": "lokidokicoki@gmail.com",
-    "longName": "LDC-Watchface",
+    "longName": "LDC Simple",
     "projectType": "native",
     "resources": {
         "media": [
@@ -19,7 +19,7 @@
         ]
     },
     "sdkVersion": "3",
-    "shortName": "LDC-Watchface",
+    "shortName": "LDC Simple",
     "targetPlatforms": [
         "basalt"
     ],
