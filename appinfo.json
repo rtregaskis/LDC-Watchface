@@ -12,12 +12,6 @@
     "resources": {
         "media": [
             {
-                "characterRegex": "[0-9:,A-Za-z\u00ba ]",
-                "file": "fonts/3Dumb.ttf",
-                "name": "FONT_DUMB_24",
-                "type": "font"
-            },
-            {
                 "file": "images/bt-icon.png",
                 "name": "IMAGE_BT_ICON",
                 "type": "png"

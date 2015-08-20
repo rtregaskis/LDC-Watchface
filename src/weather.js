@@ -11,16 +11,16 @@ function locationSuccess(pos) {
   // request weather here
   // construct url
   var url = 'http://api.openweathermap.org/data/2.5/weather?lat=' + pos.coords.latitude + '&lon=' + pos.coords.longitude;
-  
+
   // send request
   xhrRequest(url, 'GET', function(response){
     //response contains a JSON object with weather info
     var json = JSON.parse(response);
-    
+
     // Temperature is in Kelvin, adjust
     var temperature = Math.round(json.main.temp - 273.15);
     console.log('Temperature is: '+temperature);
-    
+
     // conditions
     var conditions = json.weather[0].main;
     console.log('Conditions are: '+conditions);
@@ -29,11 +29,11 @@ function locationSuccess(pos) {
       'KEY_TEMPERATURE':temperature,
       'KEY_CONDITIONS':conditions
     };
-    
+
     // send to pebble
-    Pebble.sendAppMessage(dictionary, 
-      function(e) {console.log('data sent successfully')}, 
-      function (e) {console.log('sending error')} 
+    Pebble.sendAppMessage(dictionary,
+      function(e) {console.log('data sent successfully')},
+      function (e) {console.log('sending error')}
     );
 
   });
@@ -54,7 +54,7 @@ function getWeather(){
 //listen for when the watchface is opened
 Pebble.addEventListener('ready', function(e){
   console.log('ready');
-  
+
   // get the initial weather
   getWeather();
 });
