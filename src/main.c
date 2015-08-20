@@ -4,22 +4,23 @@ enum {
   KEY_TEMPERATURE = 0,
   KEY_CONDITIONS = 1
 };
-  
+
 static Window *s_main_window;
 static TextLayer *s_time_layer, *s_date_layer, *s_weather_layer;
 static int s_battery_level;
 static Layer * s_battery_layer;
 static BitmapLayer *s_bt_icon_layer;
 static GBitmap *s_bt_icon_bitmap;
+static GFont s_custom_font_16;
 
 static void update_time(){
   // get a tm struct
   time_t temp = time(NULL);
   struct tm *tick_time = localtime(&temp);
-  
+
   //create a long-lived buffer
   static char buffer[] = "00:00";
-  
+
   // write the current hors and minutes into the buffer
   if(clock_is_24h_style() == true){
     // use 24 hour style
