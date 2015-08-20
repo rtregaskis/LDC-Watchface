@@ -184,7 +184,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     // which key did we get?
     switch(t->key){
       case KEY_TEMPERATURE:
-        snprintf(temperature_buffer, sizeof(temperature_buffer), "%dC", (int)t->value->int32);
+        snprintf(temperature_buffer, sizeof(temperature_buffer), "%d\u00B0C", (int)t->value->int32);
         break;
       case KEY_CONDITIONS:
         snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", t->value->cstring);
