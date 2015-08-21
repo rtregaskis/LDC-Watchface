@@ -34,8 +34,8 @@ static void update_time(){
   text_layer_set_text(s_time_layer, buffer);
 
   // copy date into buffer from tm structure
-  static char date_buffer[] = "yyyy/mm/dd";
-  strftime(date_buffer, sizeof(date_buffer), "%Y-%m-%d", tick_time);
+  static char date_buffer[] = "yyyy-mm-dd day";
+  strftime(date_buffer, sizeof(date_buffer), "%Y-%m-%d %a", tick_time);
 
   //show the date
   text_layer_set_text(s_date_layer, date_buffer);
