@@ -75,7 +75,7 @@ static void bluetooth_callback(bool connected){
   }
 }
 
-static void main_window_load(Window* window) {
+static void buildTimeDisplay(Window *window){
   // create time textLayer
   s_time_layer = text_layer_create(GRect(0, 55, 144, 50));
 
@@ -90,7 +90,18 @@ static void main_window_load(Window* window) {
 
   // add it as a child layer to the Window's root layer.
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+}
 
+static void buildBatteryDisplay(Window *window){
+  // create battery meter layer;
+  s_battery_layer = layer_create(GRect(12, 54, 115, 8));
+  layer_set_update_proc(s_battery_layer, battery_update_proc);
+
+  // Add to window
+  layer_add_child(window_get_root_layer(window), s_battery_layer);
+}
+
+static void buildWeatherDisplay(Window *window){
   // create weather textLayer
   s_weather_layer = text_layer_create(GRect(0, 105, 144, 30));
 
@@ -103,10 +114,13 @@ static void main_window_load(Window* window) {
   //text_layer_set_font(s_weather_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
   text_layer_set_font(s_weather_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
   text_layer_set_text_alignment(s_weather_layer, GTextAlignmentCenter);
+  text_layer_set_text(s_weather_layer, "Loading...");
 
   // add it as a child layer to the Window's root layer.
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
+}
 
+static void buildDateDisplay(Window *window){
   // create date textLayer
   s_date_layer = text_layer_create(GRect(0, 130, 144, 30));
 
@@ -117,18 +131,12 @@ static void main_window_load(Window* window) {
   //text_layer_set_font(s_date_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
   text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
-  text_layer_set_text(s_weather_layer, "Loading...");
 
   // add it as a child layer to the Window's root layer.
   layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
+}
 
-  // create battery meter layer;
-  s_battery_layer = layer_create(GRect(12, 54, 115, 8));
-  layer_set_update_proc(s_battery_layer, battery_update_proc);
-
-  // Add to window
-  layer_add_child(window_get_root_layer(window), s_battery_layer);
-
+static void buildIconsDisplay(Window *window){
   //create bluetooth icon gbitmap
   s_bt_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_ICON);
 
@@ -136,6 +144,14 @@ static void main_window_load(Window* window) {
   s_bt_icon_layer = bitmap_layer_create(GRect(59, 12, 30, 30));
   bitmap_layer_set_bitmap(s_bt_icon_layer, s_bt_icon_bitmap);
   layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bt_icon_layer));
+}
+
+static void main_window_load(Window* window) {
+  buildTimeDisplay(window);
+  buildBatteryDisplay(window);
+  buildWeatherDisplay(window);
+  buildDateDisplay(window);
+  buildIconsDisplay(window);
 }
 
 static void main_window_unload(Window* window) {
