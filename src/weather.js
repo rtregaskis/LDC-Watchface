@@ -32,8 +32,8 @@ function locationSuccess(pos) {
 
     // send to pebble
     Pebble.sendAppMessage(dictionary,
-      function(e) {console.log('data sent successfully')},
-      function (e) {console.log('sending error')}
+      function(e) {console.log('data sent successfully');},
+      function (e) {console.log('sending error');}
     );
 
   });

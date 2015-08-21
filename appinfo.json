@@ -14,12 +14,17 @@
             {
                 "characterRegex": "[:0-9]",
                 "file": "fonts/ProFontWindows.ttf",
-                "name": "FONT_TIME_DISPLAY_42",
+                "name": "FONT_TIME_DISPLAY_48",
                 "type": "font"
             },
             {
                 "file": "images/bt-icon.png",
                 "name": "IMAGE_BT_ICON",
+                "type": "png"
+            },
+            {
+                "file": "images/charge.png",
+                "name": "IMAGE_CHARGE_ICON",
                 "type": "png"
             }
         ]

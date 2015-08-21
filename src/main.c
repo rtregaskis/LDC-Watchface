@@ -1,5 +1,6 @@
 #include <pebble.h>
 
+//=====================================
 enum {
   KEY_TEMPERATURE = 0,
   KEY_CONDITIONS = 1
@@ -8,11 +9,16 @@ enum {
 static Window *s_main_window;
 static TextLayer *s_time_layer, *s_date_layer, *s_weather_layer;
 static int s_battery_level;
-static Layer * s_battery_layer;
+static Layer * s_battery_layer, *s_root_layer;
 static BitmapLayer *s_bt_icon_layer;
 static GBitmap *s_bt_icon_bitmap;
+static BitmapLayer *s_charge_icon_layer;
+static GBitmap *s_charge_icon_bitmap;
 static GFont s_custom_font_16;
+static GRect s_bounds;
 
+//=====================================
+// update routines
 static void update_time(){
   // get a tm struct
   time_t temp = time(NULL);
@@ -75,6 +81,9 @@ static void bluetooth_callback(bool connected){
   }
 }
 
+//=====================================
+// build gui
+
 static void buildTimeDisplay(Window *window){
   // create time textLayer
   s_time_layer = text_layer_create(GRect(0, 55, 144, 50));
@@ -84,19 +93,19 @@ static void buildTimeDisplay(Window *window){
   //text_layer_set_text(s_time_layer, "00:00");
 
 
-  s_custom_font_16 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DISPLAY_42));
+  s_custom_font_16 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DISPLAY_48));
 
   // improve the layout to be more like a watchface
   text_layer_set_font(s_time_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
   // add it as a child layer to the Window's root layer.
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_time_layer));
+  layer_add_child(s_root_layer, text_layer_get_layer(s_time_layer));
 }
 
 static void buildBatteryDisplay(Window *window){
   // create battery meter layer;
-  s_battery_layer = layer_create(GRect(12, 54, 115, 8));
+  s_battery_layer = layer_create(GRect(25, 5, s_bounds.size.w - 50, 20));
   layer_set_update_proc(s_battery_layer, battery_update_proc);
 
   // Add to window
@@ -105,7 +114,7 @@ static void buildBatteryDisplay(Window *window){
 
 static void buildWeatherDisplay(Window *window){
   // create weather textLayer
-  s_weather_layer = text_layer_create(GRect(0, 105, 144, 30));
+  s_weather_layer = text_layer_create(GRect(0, 130, 144, 30));
 
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorBlack);
@@ -118,12 +127,12 @@ static void buildWeatherDisplay(Window *window){
   text_layer_set_text(s_weather_layer, "Loading...");
 
   // add it as a child layer to the Window's root layer.
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_weather_layer));
+  layer_add_child(s_root_layer, text_layer_get_layer(s_weather_layer));
 }
 
 static void buildDateDisplay(Window *window){
   // create date textLayer
-  s_date_layer = text_layer_create(GRect(0, 130, 144, 30));
+  s_date_layer = text_layer_create(GRect(0, 105, 144, 30));
 
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_text_color(s_date_layer, GColorBlack);
@@ -134,7 +143,7 @@ static void buildDateDisplay(Window *window){
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
 
   // add it as a child layer to the Window's root layer.
-  layer_add_child(window_get_root_layer(window), text_layer_get_layer(s_date_layer));
+  layer_add_child(s_root_layer, text_layer_get_layer(s_date_layer));
 }
 
 static void buildIconsDisplay(Window *window){
@@ -142,12 +151,24 @@ static void buildIconsDisplay(Window *window){
   s_bt_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_ICON);
 
   // create the bitmaplayer to display the bitmap
-  s_bt_icon_layer = bitmap_layer_create(GRect(59, 12, 30, 30));
+  s_bt_icon_layer = bitmap_layer_create(GRect(5, 5, 20, 20));
   bitmap_layer_set_bitmap(s_bt_icon_layer, s_bt_icon_bitmap);
-  layer_add_child(window_get_root_layer(window), bitmap_layer_get_layer(s_bt_icon_layer));
+  layer_add_child(s_root_layer, bitmap_layer_get_layer(s_bt_icon_layer));
+
+  //create charge icon gbitmap
+  s_charge_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHARGE_ICON);
+
+  // create the bitmaplayer to display the bitmap
+  s_charge_icon_layer = bitmap_layer_create(GRect(s_bounds.size.w-25, 5, 20, 20));
+  bitmap_layer_set_bitmap(s_charge_icon_layer, s_charge_icon_bitmap);
+  layer_add_child(s_root_layer, bitmap_layer_get_layer(s_charge_icon_layer));
 }
 
+//=====================================
+// window load/unload
 static void main_window_load(Window* window) {
+  s_root_layer = window_get_root_layer(window);
+  s_bounds = layer_get_bounds(s_root_layer);
   buildTimeDisplay(window);
   buildBatteryDisplay(window);
   buildWeatherDisplay(window);
@@ -165,6 +186,7 @@ static void main_window_unload(Window* window) {
   bitmap_layer_destroy(s_bt_icon_layer);
 }
 
+//=====================================
 // service handlers
 static void tick_handler(struct tm* tick_time, TimeUnits units_changed){
   update_time();
@@ -191,6 +213,8 @@ static void battery_callback(BatteryChargeState state){
   layer_mark_dirty(s_battery_layer);
 }
 
+//=====================================
+// messaging system
 static void inbox_received_callback(DictionaryIterator *iterator, void *context){
   // store incoming data
   static char temperature_buffer[8];
@@ -236,6 +260,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context){
   APP_LOG(APP_LOG_LEVEL_INFO, "Outbox send success");
 }
 
+//=====================================
 // initiliase/tear down
 static void init() {
   // register with the time service
@@ -282,7 +307,6 @@ static void deinit() {
   // destroy window
   window_destroy(s_main_window);
 }
-
 
 int main(void){
   init();
