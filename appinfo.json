@@ -12,6 +12,12 @@
     "resources": {
         "media": [
             {
+                "characterRegex": "[:0-9]",
+                "file": "fonts/ProFontWindows.ttf",
+                "name": "FONT_TIME_DISPLAY_42",
+                "type": "font"
+            },
+            {
                 "file": "images/bt-icon.png",
                 "name": "IMAGE_BT_ICON",
                 "type": "png"

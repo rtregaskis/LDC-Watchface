@@ -84,8 +84,10 @@ static void buildTimeDisplay(Window *window){
   //text_layer_set_text(s_time_layer, "00:00");
 
 
+  s_custom_font_16 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DISPLAY_42));
+
   // improve the layout to be more like a watchface
-  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
+  text_layer_set_font(s_time_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
   // add it as a child layer to the Window's root layer.
@@ -108,7 +110,6 @@ static void buildWeatherDisplay(Window *window){
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorBlack);
 
-  //s_custom_font_16 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_DUMB_16));
 
   // improve the layout to be more like a watchface
   //text_layer_set_font(s_weather_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
