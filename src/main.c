@@ -3,7 +3,8 @@
 //=====================================
 enum {
   KEY_TEMPERATURE = 0,
-  KEY_CONDITIONS = 1
+  KEY_CONDITIONS = 1,
+  KEY_ICON = 2
 };
 
 static Window *s_main_window;
@@ -12,6 +13,8 @@ static int s_battery_level;
 static Layer * s_battery_layer, *s_root_layer;
 static BitmapLayer *s_bt_icon_layer;
 static GBitmap *s_bt_icon_bitmap;
+static BitmapLayer *s_weather_icon_layer;
+static GBitmap *s_weather_icon_bitmap;
 static BitmapLayer *s_charge_black_layer, *s_charge_white_layer ;
 static GBitmap *s_charge_black_bitmap, *s_charge_white_bitmap;
 static GFont s_custom_font_16;
@@ -114,7 +117,7 @@ static void buildBatteryDisplay(Window *window){
 
 static void buildWeatherDisplay(Window *window){
   // create weather textLayer
-  s_weather_layer = text_layer_create(GRect(0, 130, 144, 30));
+  s_weather_layer = text_layer_create(GRect(s_bounds.size.w-50, s_bounds.size.h-50, 50, 50));
 
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorBlack);
@@ -122,7 +125,7 @@ static void buildWeatherDisplay(Window *window){
 
   // improve the layout to be more like a watchface
   //text_layer_set_font(s_weather_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
-  text_layer_set_font(s_weather_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24));
+  text_layer_set_font(s_weather_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28));
   text_layer_set_text_alignment(s_weather_layer, GTextAlignmentCenter);
   text_layer_set_text(s_weather_layer, "Loading...");
 
@@ -154,6 +157,16 @@ static void buildIconsDisplay(Window *window){
   s_bt_icon_layer = bitmap_layer_create(GRect(5, 5, 20, 20));
   bitmap_layer_set_bitmap(s_bt_icon_layer, s_bt_icon_bitmap);
   layer_add_child(s_root_layer, bitmap_layer_get_layer(s_bt_icon_layer));
+
+  //create bluetooth icon gbitmap
+  s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_01D);
+
+  // create the bitmaplayer to display the bitmap
+  s_weather_icon_layer = bitmap_layer_create(GRect(0, s_bounds.size.h - 50, 50, 50));
+  bitmap_layer_set_bitmap(s_weather_icon_layer, s_weather_icon_bitmap);
+  bitmap_layer_set_compositing_mode(s_weather_icon_layer, GCompOpSet);
+  layer_add_child(s_root_layer, bitmap_layer_get_layer(s_weather_icon_layer));
+
 
   //create charge icon gbitmap
   s_charge_black_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHARGE_BLACK);
@@ -258,8 +271,45 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       case KEY_TEMPERATURE:
         snprintf(temperature_buffer, sizeof(temperature_buffer), "%d\u00B0C", (int)t->value->int32);
         break;
-      case KEY_CONDITIONS:
+      case KEY_ICON:
         snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", t->value->cstring);
+        if(strcmp(t->value->cstring, "01d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_01D);
+        } else if(strcmp(t->value->cstring, "02d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_02D);
+        } else if(strcmp(t->value->cstring, "03d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_03D);
+        } else if(strcmp(t->value->cstring, "04d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_04D);
+        } else if(strcmp(t->value->cstring, "09d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_09D);
+        } else if(strcmp(t->value->cstring, "10d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_10D);
+        } else if(strcmp(t->value->cstring, "11d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_11D);
+        } else if(strcmp(t->value->cstring, "13d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_13D);
+        } else if(strcmp(t->value->cstring, "50d") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_50D);
+        } else if(strcmp(t->value->cstring, "01n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_01N);
+        } else if(strcmp(t->value->cstring, "02n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_02N);
+        } else if(strcmp(t->value->cstring, "03n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_03N);
+        } else if(strcmp(t->value->cstring, "04n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_04N);
+        } else if(strcmp(t->value->cstring, "09n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_09N);
+        } else if(strcmp(t->value->cstring, "10n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_10N);
+        } else if(strcmp(t->value->cstring, "11n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_11N);
+        } else if(strcmp(t->value->cstring, "13n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_13N);
+        } else if(strcmp(t->value->cstring, "50n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_50N);
+        }
         break;
       default:
         APP_LOG(APP_LOG_LEVEL_ERROR, "Key %d not recognised", (int)t->key);
@@ -269,8 +319,12 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     t = dict_read_next(iterator);
   }
 
+
+  bitmap_layer_set_bitmap(s_weather_icon_layer, s_weather_icon_bitmap);
+  layer_mark_dirty(bitmap_layer_get_layer(s_weather_icon_layer));
+
   // assemble weather for display
-  snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s, %s", temperature_buffer, conditions_buffer);
+  snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s", temperature_buffer);//, conditions_buffer);
   text_layer_set_text(s_weather_layer, weather_layer_buffer);
 }
 

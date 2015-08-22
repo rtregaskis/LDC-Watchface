@@ -1,5 +1,6 @@
 {
     "appKeys": {
+        "KEY_ICON": 2,
         "KEY_CONDITIONS": 1,
         "KEY_TEMPERATURE": 0
     },
@@ -16,6 +17,96 @@
                 "file": "fonts/ProFontWindows.ttf",
                 "name": "FONT_TIME_DISPLAY_48",
                 "type": "font"
+            },
+            {
+                "file": "images/01d.png",
+                "name": "IMAGE_01D",
+                "type": "png"
+            },
+            {
+                "file": "images/02d.png",
+                "name": "IMAGE_02D",
+                "type": "png"
+            },
+            {
+                "file": "images/03d.png",
+                "name": "IMAGE_03D",
+                "type": "png"
+            },
+            {
+                "file": "images/04d.png",
+                "name": "IMAGE_04D",
+                "type": "png"
+            },
+            {
+                "file": "images/09d.png",
+                "name": "IMAGE_09D",
+                "type": "png"
+            },
+            {
+                "file": "images/10d.png",
+                "name": "IMAGE_10D",
+                "type": "png"
+            },
+            {
+                "file": "images/11d.png",
+                "name": "IMAGE_11D",
+                "type": "png"
+            },
+            {
+                "file": "images/13d.png",
+                "name": "IMAGE_13D",
+                "type": "png"
+            },
+            {
+                "file": "images/50d.png",
+                "name": "IMAGE_50D",
+                "type": "png"
+            },
+            {
+                "file": "images/01n.png",
+                "name": "IMAGE_01N",
+                "type": "png"
+            },
+            {
+                "file": "images/02n.png",
+                "name": "IMAGE_02N",
+                "type": "png"
+            },
+            {
+                "file": "images/03n.png",
+                "name": "IMAGE_03N",
+                "type": "png"
+            },
+            {
+                "file": "images/04n.png",
+                "name": "IMAGE_04N",
+                "type": "png"
+            },
+            {
+                "file": "images/09n.png",
+                "name": "IMAGE_09N",
+                "type": "png"
+            },
+            {
+                "file": "images/10n.png",
+                "name": "IMAGE_10N",
+                "type": "png"
+            },
+            {
+                "file": "images/11n.png",
+                "name": "IMAGE_11N",
+                "type": "png"
+            },
+            {
+                "file": "images/13n.png",
+                "name": "IMAGE_13N",
+                "type": "png"
+            },
+            {
+                "file": "images/50n.png",
+                "name": "IMAGE_50N",
+                "type": "png"
             },
             {
                 "file": "images/bt-icon.png",
