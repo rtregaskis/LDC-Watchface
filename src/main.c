@@ -86,7 +86,7 @@ static void bluetooth_callback(bool connected){
 
 static void buildTimeDisplay(Window *window){
   // create time textLayer
-  s_time_layer = text_layer_create(GRect(0, 55, 144, 50));
+  s_time_layer = text_layer_create(GRect(0, 25, 144, 50));
 
   text_layer_set_background_color(s_time_layer, GColorWhite);
   text_layer_set_text_color(s_time_layer, GColorBlack);
@@ -132,7 +132,7 @@ static void buildWeatherDisplay(Window *window){
 
 static void buildDateDisplay(Window *window){
   // create date textLayer
-  s_date_layer = text_layer_create(GRect(0, 105, 144, 30));
+  s_date_layer = text_layer_create(GRect(0, 75, 144, 30));
 
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_text_color(s_date_layer, GColorBlack);
