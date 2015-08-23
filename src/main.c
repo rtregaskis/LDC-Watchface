@@ -116,7 +116,7 @@ static void buildBatteryDisplay(Window *window){
 
 static void buildWeatherDisplay(Window *window){
   // create weather textLayer
-  s_weather_layer = text_layer_create(GRect(s_bounds.size.w-50, s_bounds.size.h-50, 50, 50));
+  s_weather_layer = text_layer_create(GRect(s_bounds.size.w-70, s_bounds.size.h-45, 50, 50));
 
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorBlack);
@@ -158,10 +158,10 @@ static void buildIconsDisplay(Window *window){
   layer_add_child(s_root_layer, bitmap_layer_get_layer(s_bt_icon_layer));
 
   //create bluetooth icon gbitmap
-  s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_01D);
+  s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_50D);
 
   // create the bitmaplayer to display the bitmap
-  s_weather_icon_layer = bitmap_layer_create(GRect(0, s_bounds.size.h - 50, 50, 50));
+  s_weather_icon_layer = bitmap_layer_create(GRect(20, s_bounds.size.h - 50, 50, 50));
   bitmap_layer_set_bitmap(s_weather_icon_layer, s_weather_icon_bitmap);
   bitmap_layer_set_compositing_mode(s_weather_icon_layer, GCompOpSet);
   layer_add_child(s_root_layer, bitmap_layer_get_layer(s_weather_icon_layer));
