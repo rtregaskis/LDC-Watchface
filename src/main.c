@@ -15,9 +15,8 @@ static BitmapLayer *s_bt_icon_layer;
 static GBitmap *s_bt_icon_bitmap;
 static BitmapLayer *s_weather_icon_layer;
 static GBitmap *s_weather_icon_bitmap;
-static BitmapLayer *s_charge_white_layer;
-static GBitmap *s_charge_black_bitmap;
-static GBitmap *s_charge_white_bitmap;
+static BitmapLayer *s_charge_icon_layer;
+static GBitmap *s_charge_icon_bitmap;
 static GFont s_time_font_48;
 static GRect s_bounds;
 static int battery_radius = 4;
@@ -169,25 +168,14 @@ static void buildIconsDisplay(Window *window){
 
 
   //create charge icon gbitmap
-  s_charge_white_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHARGE);
-  //s_charge_black_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHARGE_BLACK);
-
-  //GSize image_size = gbitmap_get_bounds(s_charge_white_bitmap).size;
-
+  s_charge_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHARGE);
   GRect image_frame = GRect(s_bounds.size.w-24, 1, 24, 24);
 
   // create the bitmaplayer to display the bitmap
-  s_charge_white_layer = bitmap_layer_create(image_frame);
-  bitmap_layer_set_bitmap(s_charge_white_layer, s_charge_white_bitmap);
-  bitmap_layer_set_compositing_mode(s_charge_white_layer, GCompOpSet);
-  layer_add_child(s_root_layer, bitmap_layer_get_layer(s_charge_white_layer));
-
-/*
-  s_charge_black_layer = bitmap_layer_create(image_frame);
-  bitmap_layer_set_bitmap(s_charge_black_layer, s_charge_black_bitmap);
-  bitmap_layer_set_compositing_mode(s_charge_black_layer, GCompOpClear);
-  layer_add_child(s_root_layer, bitmap_layer_get_layer(s_charge_black_layer));
-  */
+  s_charge_icon_layer = bitmap_layer_create(image_frame);
+  bitmap_layer_set_bitmap(s_charge_icon_layer, s_charge_icon_bitmap);
+  bitmap_layer_set_compositing_mode(s_charge_icon_layer, GCompOpSet);
+  layer_add_child(s_root_layer, bitmap_layer_get_layer(s_charge_icon_layer));
 }
 
 //=====================================
@@ -209,11 +197,9 @@ static void main_window_unload(Window* window) {
   text_layer_destroy(s_date_layer);
   layer_destroy(s_battery_layer);
   bitmap_layer_destroy(s_bt_icon_layer);
-  bitmap_layer_destroy(s_charge_white_layer);
-  //bitmap_layer_destroy(s_charge_black_layer);
+  bitmap_layer_destroy(s_charge_icon_layer);
   gbitmap_destroy(s_bt_icon_bitmap);
-  gbitmap_destroy(s_charge_white_bitmap);
-  gbitmap_destroy(s_charge_black_bitmap);
+  gbitmap_destroy(s_charge_icon_bitmap);
 }
 
 //=====================================
@@ -243,15 +229,12 @@ static void battery_callback(BatteryChargeState state){
   layer_mark_dirty(s_battery_layer);
 
   if(state.is_charging){
-      //layer_set_hidden(bitmap_layer_get_layer(s_charge_black_layer), false);
-      layer_set_hidden(bitmap_layer_get_layer(s_charge_white_layer), false);
+      layer_set_hidden(bitmap_layer_get_layer(s_charge_icon_layer), false);
   }else{
-      //layer_set_hidden(bitmap_layer_get_layer(s_charge_black_layer), true);
-      layer_set_hidden(bitmap_layer_get_layer(s_charge_white_layer), true);
+      layer_set_hidden(bitmap_layer_get_layer(s_charge_icon_layer), true);
   }
 
-  //layer_mark_dirty(bitmap_layer_get_layer(s_charge_black_layer));
-  layer_mark_dirty(bitmap_layer_get_layer(s_charge_white_layer));
+  layer_mark_dirty(bitmap_layer_get_layer(s_charge_icon_layer));
 }
 
 //=====================================
