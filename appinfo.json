@@ -116,7 +116,7 @@
             {
                 "file": "images/charge.png",
                 "name": "IMAGE_CHARGE",
-                "type": "png-trans"
+                "type": "png"
             }
         ]
     },
