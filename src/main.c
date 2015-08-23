@@ -81,7 +81,6 @@ static void battery_update_proc(Layer *layer, GContext *ctx){
   graphics_fill_rect(ctx, GRect(2,1, width, bounds.size.h - 2), battery_radius, GCornersAll);
 }
 
-
 static void timewarp_update_proc(Layer *layer, GContext *ctx){
   // draw timewarp
   //APP_LOG(APP_LOG_LEVEL_INFO, "timewarp: GColorFromRGB(%d, %d, %d)", red, green, blue);
@@ -188,7 +187,6 @@ static void buildIconsDisplay(Window *window){
   bitmap_layer_set_compositing_mode(s_weather_icon_layer, GCompOpSet);
   layer_add_child(s_root_layer, bitmap_layer_get_layer(s_weather_icon_layer));
 
-
   //create charge icon gbitmap
   s_charge_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_CHARGE);
   GRect image_frame = GRect(s_bounds.size.w-24, 1, 24, 24);
@@ -214,16 +212,22 @@ static void main_window_load(Window* window) {
 
 static void main_window_unload(Window* window) {
   // destroy textlayer
+  text_layer_destroy(s_date_layer);
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_weather_layer);
-  text_layer_destroy(s_date_layer);
+
   layer_destroy(s_battery_layer);
   layer_destroy(s_timewarp_layer);
+
   bitmap_layer_destroy(s_bt_icon_layer);
   bitmap_layer_destroy(s_charge_icon_layer);
+  bitmap_layer_destroy(s_weather_icon_layer);
+
   gbitmap_destroy(s_bt_icon_bitmap);
   gbitmap_destroy(s_charge_icon_bitmap);
   gbitmap_destroy(s_weather_icon_bitmap);
+
+  fonts_unload_custom_font(s_time_font_48);
 }
 
 //=====================================
@@ -268,7 +272,6 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   static char temperature_buffer[8];
   static char conditions_buffer[32];
   static char weather_layer_buffer[32];
-
 
   // read first item
   Tuple *t = dict_read_first(iterator);
@@ -321,7 +324,6 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
     // get next item
     t = dict_read_next(iterator);
   }
-
 
   bitmap_layer_set_bitmap(s_weather_icon_layer, s_weather_icon_bitmap);
   layer_mark_dirty(bitmap_layer_get_layer(s_weather_icon_layer));
