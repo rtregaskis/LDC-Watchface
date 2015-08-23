@@ -30,17 +30,17 @@
             },
             {
                 "file": "images/03d.png",
-                "name": "IMAGE_03D",
+                "name": "IMAGE_03DN",
                 "type": "png"
             },
             {
                 "file": "images/04d.png",
-                "name": "IMAGE_04D",
+                "name": "IMAGE_04DN",
                 "type": "png"
             },
             {
                 "file": "images/09d.png",
-                "name": "IMAGE_09D",
+                "name": "IMAGE_09DN",
                 "type": "png"
             },
             {
@@ -50,17 +50,17 @@
             },
             {
                 "file": "images/11d.png",
-                "name": "IMAGE_11D",
+                "name": "IMAGE_11DN",
                 "type": "png"
             },
             {
                 "file": "images/13d.png",
-                "name": "IMAGE_13D",
+                "name": "IMAGE_13DN",
                 "type": "png"
             },
             {
                 "file": "images/50d.png",
-                "name": "IMAGE_50D",
+                "name": "IMAGE_50DN",
                 "type": "png"
             },
             {
@@ -74,38 +74,8 @@
                 "type": "png"
             },
             {
-                "file": "images/03n.png",
-                "name": "IMAGE_03N",
-                "type": "png"
-            },
-            {
-                "file": "images/04n.png",
-                "name": "IMAGE_04N",
-                "type": "png"
-            },
-            {
-                "file": "images/09n.png",
-                "name": "IMAGE_09N",
-                "type": "png"
-            },
-            {
                 "file": "images/10n.png",
                 "name": "IMAGE_10N",
-                "type": "png"
-            },
-            {
-                "file": "images/11n.png",
-                "name": "IMAGE_11N",
-                "type": "png"
-            },
-            {
-                "file": "images/13n.png",
-                "name": "IMAGE_13N",
-                "type": "png"
-            },
-            {
-                "file": "images/50n.png",
-                "name": "IMAGE_50N",
                 "type": "png"
             },
             {
