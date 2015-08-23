@@ -20,7 +20,7 @@ static GBitmap *s_charge_icon_bitmap;
 static GFont s_time_font_48;
 static GRect s_bounds;
 static int battery_radius = 4;
-static bool hasBattery = false;
+static int red, green, blue = 0;
 
 //=====================================
 // update routines
@@ -41,12 +41,9 @@ static void update_time(){
     strftime(buffer, sizeof("00:00"), "%I:%M", tick_time);
   }
 
-  int red = (int)((tick_time->tm_hour / 23.0f) * 255.0f);
-  int green = (int)((tick_time->tm_min / 59.0f) * 255.0f);
-  int blue = (int)((tick_time->tm_sec / 61.0f) * 255.0f);
-
-  // draw timewarp
-  APP_LOG(APP_LOG_LEVEL_INFO, "timewarp: GColorFromRGB(%d, %d, %d)", red, green, blue);
+  red = (int)((tick_time->tm_hour / 23.0f) * 255.0f);
+  green = (int)((tick_time->tm_min / 59.0f) * 255.0f);
+  blue = (int)((tick_time->tm_sec / 61.0f) * 255.0f);
 
   //display this time on the TextLayer
   text_layer_set_text(s_time_layer, buffer);
@@ -76,15 +73,22 @@ static void battery_update_proc(Layer *layer, GContext *ctx){
     }
   }
 
-  if(!hasBattery){
-      graphics_context_set_fill_color(ctx, GColorBlack);
-      graphics_fill_rect(ctx, bounds, battery_radius, GCornersAll);
-      hasBattery = true;
-  }
+  graphics_context_set_fill_color(ctx, GColorBlack);
+  graphics_fill_rect(ctx, bounds, battery_radius, GCornersAll);
 
   //draw the bar
   graphics_context_set_fill_color(ctx, colour);
   graphics_fill_rect(ctx, GRect(2,1, width, bounds.size.h - 2), battery_radius, GCornersAll);
+}
+
+
+static void timewarp_update_proc(Layer *layer, GContext *ctx){
+  // draw timewarp
+  //APP_LOG(APP_LOG_LEVEL_INFO, "timewarp: GColorFromRGB(%d, %d, %d)", red, green, blue);
+
+  GRect bounds = layer_get_bounds(layer);
+  graphics_context_set_fill_color(ctx, GColorFromRGB(red, green, blue));
+  graphics_fill_rect(ctx, bounds, battery_radius, GCornersAll);
 }
 
 static void bluetooth_callback(bool connected){
@@ -102,7 +106,7 @@ static void bluetooth_callback(bool connected){
 
 static void buildTimeDisplay(Window *window){
   // create time textLayer
-  s_time_layer = text_layer_create(GRect(0, 25, 144, 50));
+  s_time_layer = text_layer_create(GRect(0, 18, 144, 50));
 
   text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorBlack);
@@ -110,20 +114,26 @@ static void buildTimeDisplay(Window *window){
   s_time_font_48 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DISPLAY_48));
 
   // improve the layout to be more like a watchface
-  text_layer_set_font(s_time_layer, s_time_font_48);//fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
+  text_layer_set_font(s_time_layer, s_time_font_48);
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
   // add it as a child layer to the Window's root layer.
   layer_add_child(s_root_layer, text_layer_get_layer(s_time_layer));
+
+  s_timewarp_layer = layer_create(GRect(5, 100, s_bounds.size.w - 10, 12));
+  layer_set_update_proc(s_timewarp_layer, timewarp_update_proc);
+
+  // Add to window
+  layer_add_child(s_root_layer, s_timewarp_layer);
 }
 
 static void buildBatteryDisplay(Window *window){
   // create battery meter layer;
-  s_battery_layer = layer_create(GRect(25, 5, s_bounds.size.w - 50, 16));
+  s_battery_layer = layer_create(GRect(25, 7, s_bounds.size.w - 50, 12));
   layer_set_update_proc(s_battery_layer, battery_update_proc);
 
   // Add to window
-  layer_add_child(window_get_root_layer(window), s_battery_layer);
+  layer_add_child(s_root_layer, s_battery_layer);
 }
 
 static void buildWeatherDisplay(Window *window){
@@ -145,7 +155,7 @@ static void buildWeatherDisplay(Window *window){
 
 static void buildDateDisplay(Window *window){
   // create date textLayer
-  s_date_layer = text_layer_create(GRect(0, 75, 144, 30));
+  s_date_layer = text_layer_create(GRect(0, 65, 144, 30));
 
   text_layer_set_background_color(s_date_layer, GColorClear);
   text_layer_set_text_color(s_date_layer, GColorBlack);
@@ -208,6 +218,7 @@ static void main_window_unload(Window* window) {
   text_layer_destroy(s_weather_layer);
   text_layer_destroy(s_date_layer);
   layer_destroy(s_battery_layer);
+  layer_destroy(s_timewarp_layer);
   bitmap_layer_destroy(s_bt_icon_layer);
   bitmap_layer_destroy(s_charge_icon_layer);
   gbitmap_destroy(s_bt_icon_bitmap);
@@ -218,7 +229,7 @@ static void main_window_unload(Window* window) {
 // service handlers
 static void tick_handler(struct tm* tick_time, TimeUnits units_changed){
   update_time();
-
+  layer_mark_dirty(s_timewarp_layer);
   //update weather
   if(tick_time->tm_min % 30 == 0){
     // begin dictionary
@@ -341,7 +352,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context){
 // initiliase/tear down
 static void init() {
   // register with the time service
-  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 
   //register for battery info updates
   battery_state_service_subscribe(battery_callback);
