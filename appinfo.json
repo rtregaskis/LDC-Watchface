@@ -19,6 +19,11 @@
                 "type": "font"
             },
             {
+                "file": "images/warning.png",
+                "name": "IMAGE_WARNING",
+                "type": "png"
+            },
+            {
                 "file": "images/01d.png",
                 "name": "IMAGE_01D",
                 "type": "png"

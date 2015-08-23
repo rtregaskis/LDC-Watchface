@@ -223,6 +223,7 @@ static void main_window_unload(Window* window) {
   bitmap_layer_destroy(s_charge_icon_layer);
   gbitmap_destroy(s_bt_icon_bitmap);
   gbitmap_destroy(s_charge_icon_bitmap);
+  gbitmap_destroy(s_weather_icon_bitmap);
 }
 
 //=====================================
@@ -231,7 +232,7 @@ static void tick_handler(struct tm* tick_time, TimeUnits units_changed){
   update_time();
   layer_mark_dirty(s_timewarp_layer);
   //update weather
-  if(tick_time->tm_min % 30 == 0){
+  if(tick_time->tm_min % 15 == 0){
     // begin dictionary
     DictionaryIterator *iter;
     app_message_outbox_begin(&iter);
@@ -283,10 +284,15 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
         snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", t->value->cstring);
         break;
       case KEY_ICON:
+        gbitmap_destroy(s_weather_icon_bitmap);
         if(strcmp(t->value->cstring, "01d") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_01D);
+        } else if(strcmp(t->value->cstring, "01n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_01N);
         } else if(strcmp(t->value->cstring, "02d") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_02D);
+        } else if(strcmp(t->value->cstring, "02n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_02N);
         } else if(strcmp(t->value->cstring, "03d") == 0 || strcmp(t->value->cstring, "03n") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_03DN);
         } else if(strcmp(t->value->cstring, "04d") == 0 || strcmp(t->value->cstring, "04n") == 0){
@@ -295,20 +301,17 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_09DN);
         } else if(strcmp(t->value->cstring, "10d") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_10D);
+        } else if(strcmp(t->value->cstring, "10n") == 0){
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_10N);
         } else if(strcmp(t->value->cstring, "11d") == 0 ||strcmp(t->value->cstring, "11n") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_11DN);
         } else if(strcmp(t->value->cstring, "13d") == 0 || strcmp(t->value->cstring, "13n") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_13DN);
         } else if(strcmp(t->value->cstring, "50d") == 0 || strcmp(t->value->cstring, "50n") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_50DN);
-        } else if(strcmp(t->value->cstring, "01n") == 0){
-            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_01N);
-        } else if(strcmp(t->value->cstring, "02n") == 0){
-            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_02N);
-        } else if(strcmp(t->value->cstring, "10n") == 0){
-            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_10N);
         } else {
-                APP_LOG(APP_LOG_LEVEL_ERROR, "Unknown icon %s", t->value->cstring);
+            s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_WARNING);
+            APP_LOG(APP_LOG_LEVEL_ERROR, "Unknown icon %s", t->value->cstring);
         }
         break;
       default:
