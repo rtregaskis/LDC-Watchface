@@ -10,7 +10,7 @@ enum {
 static Window *s_main_window;
 static TextLayer *s_time_layer, *s_date_layer, *s_weather_layer;
 static int s_battery_level;
-static Layer * s_battery_layer, *s_root_layer;
+static Layer * s_battery_layer, *s_root_layer, *s_timewarp_layer;
 static BitmapLayer *s_bt_icon_layer;
 static GBitmap *s_bt_icon_bitmap;
 static BitmapLayer *s_weather_icon_layer;
@@ -20,6 +20,7 @@ static GBitmap *s_charge_icon_bitmap;
 static GFont s_time_font_48;
 static GRect s_bounds;
 static int battery_radius = 4;
+static bool hasBattery = false;
 
 //=====================================
 // update routines
@@ -31,7 +32,7 @@ static void update_time(){
   //create a long-lived buffer
   static char buffer[] = "00:00";
 
-  // write the current hors and minutes into the buffer
+  // write the current hours and minutes into the buffer
   if(clock_is_24h_style() == true){
     // use 24 hour style
     strftime(buffer, sizeof("00:00"), "%H:%M", tick_time);
@@ -39,6 +40,13 @@ static void update_time(){
     // use 12 hour style
     strftime(buffer, sizeof("00:00"), "%I:%M", tick_time);
   }
+
+  int red = (int)((tick_time->tm_hour / 23.0f) * 255.0f);
+  int green = (int)((tick_time->tm_min / 59.0f) * 255.0f);
+  int blue = (int)((tick_time->tm_sec / 61.0f) * 255.0f);
+
+  // draw timewarp
+  APP_LOG(APP_LOG_LEVEL_INFO, "timewarp: GColorFromRGB(%d, %d, %d)", red, green, blue);
 
   //display this time on the TextLayer
   text_layer_set_text(s_time_layer, buffer);
@@ -67,8 +75,12 @@ static void battery_update_proc(Layer *layer, GContext *ctx){
       colour =  GColorRed;
     }
   }
-  graphics_context_set_fill_color(ctx, GColorBlack);
-  graphics_fill_rect(ctx, bounds, battery_radius, GCornersAll);
+
+  if(!hasBattery){
+      graphics_context_set_fill_color(ctx, GColorBlack);
+      graphics_fill_rect(ctx, bounds, battery_radius, GCornersAll);
+      hasBattery = true;
+  }
 
   //draw the bar
   graphics_context_set_fill_color(ctx, colour);
