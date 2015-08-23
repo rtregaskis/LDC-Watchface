@@ -17,8 +17,9 @@ static BitmapLayer *s_weather_icon_layer;
 static GBitmap *s_weather_icon_bitmap;
 static BitmapLayer *s_charge_black_layer, *s_charge_white_layer ;
 static GBitmap *s_charge_black_bitmap, *s_charge_white_bitmap;
-static GFont s_custom_font_16;
+static GFont s_time_font_48;
 static GRect s_bounds;
+static int battery_radius = 4;
 
 //=====================================
 // update routines
@@ -67,11 +68,11 @@ static void battery_update_proc(Layer *layer, GContext *ctx){
     }
   }
   graphics_context_set_fill_color(ctx, GColorBlack);
-  graphics_fill_rect(ctx, bounds, 4, GCornersAll);
+  graphics_fill_rect(ctx, bounds, battery_radius, GCornersAll);
 
   //draw the bar
   graphics_context_set_fill_color(ctx, colour);
-  graphics_fill_rect(ctx, GRect(2,1, width, bounds.size.h - 2), 2, GCornersAll);
+  graphics_fill_rect(ctx, GRect(2,1, width, bounds.size.h - 2), battery_radius, GCornersAll);
 }
 
 static void bluetooth_callback(bool connected){
@@ -91,15 +92,13 @@ static void buildTimeDisplay(Window *window){
   // create time textLayer
   s_time_layer = text_layer_create(GRect(0, 25, 144, 50));
 
-  text_layer_set_background_color(s_time_layer, GColorWhite);
+  text_layer_set_background_color(s_time_layer, GColorClear);
   text_layer_set_text_color(s_time_layer, GColorBlack);
-  //text_layer_set_text(s_time_layer, "00:00");
 
-
-  s_custom_font_16 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DISPLAY_48));
+  s_time_font_48 = fonts_load_custom_font(resource_get_handle(RESOURCE_ID_FONT_TIME_DISPLAY_48));
 
   // improve the layout to be more like a watchface
-  text_layer_set_font(s_time_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
+  text_layer_set_font(s_time_layer, s_time_font_48);//fonts_get_system_font(FONT_KEY_ROBOTO_BOLD_SUBSET_49));
   text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
 
   // add it as a child layer to the Window's root layer.
@@ -108,7 +107,7 @@ static void buildTimeDisplay(Window *window){
 
 static void buildBatteryDisplay(Window *window){
   // create battery meter layer;
-  s_battery_layer = layer_create(GRect(25, 5, s_bounds.size.w - 50, 20));
+  s_battery_layer = layer_create(GRect(25, 5, s_bounds.size.w - 50, 16));
   layer_set_update_proc(s_battery_layer, battery_update_proc);
 
   // Add to window
@@ -122,9 +121,8 @@ static void buildWeatherDisplay(Window *window){
   text_layer_set_background_color(s_weather_layer, GColorClear);
   text_layer_set_text_color(s_weather_layer, GColorBlack);
 
-
   // improve the layout to be more like a watchface
-  //text_layer_set_font(s_weather_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
+  //text_layer_set_font(s_weather_layer, s_time_font_48);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
   text_layer_set_font(s_weather_layer, fonts_get_system_font(FONT_KEY_GOTHIC_28));
   text_layer_set_text_alignment(s_weather_layer, GTextAlignmentCenter);
   text_layer_set_text(s_weather_layer, "Loading...");
@@ -141,7 +139,7 @@ static void buildDateDisplay(Window *window){
   text_layer_set_text_color(s_date_layer, GColorBlack);
 
   // improve the layout to be more like a watchface
-  //text_layer_set_font(s_date_layer, s_custom_font_16);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
+  //text_layer_set_font(s_date_layer, s_time_font_48);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
   text_layer_set_font(s_date_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
   text_layer_set_text_alignment(s_date_layer, GTextAlignmentCenter);
 
@@ -154,8 +152,9 @@ static void buildIconsDisplay(Window *window){
   s_bt_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_BT_ICON);
 
   // create the bitmaplayer to display the bitmap
-  s_bt_icon_layer = bitmap_layer_create(GRect(5, 5, 20, 20));
+  s_bt_icon_layer = bitmap_layer_create(GRect(0, 0, 24, 24));
   bitmap_layer_set_bitmap(s_bt_icon_layer, s_bt_icon_bitmap);
+  bitmap_layer_set_compositing_mode(s_bt_icon_layer, GCompOpSet);
   layer_add_child(s_root_layer, bitmap_layer_get_layer(s_bt_icon_layer));
 
   //create bluetooth icon gbitmap
@@ -363,6 +362,7 @@ static void init() {
 
   //create main window element and assign to pointer
   s_main_window = window_create();
+  window_set_background_color(s_main_window, GColorCadetBlue);
 
   //set handlers to manage elements inside Window
   window_set_window_handlers(s_main_window, (WindowHandlers){
