@@ -279,8 +279,10 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
       case KEY_TEMPERATURE:
         snprintf(temperature_buffer, sizeof(temperature_buffer), "%d\u00B0C", (int)t->value->int32);
         break;
-      case KEY_ICON:
+      case KEY_CONDITIONS:
         snprintf(conditions_buffer, sizeof(conditions_buffer), "%s", t->value->cstring);
+        break;
+      case KEY_ICON:
         if(strcmp(t->value->cstring, "01d") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_01D);
         } else if(strcmp(t->value->cstring, "02d") == 0){
@@ -317,6 +319,8 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_13N);
         } else if(strcmp(t->value->cstring, "50n") == 0){
             s_weather_icon_bitmap = gbitmap_create_with_resource(RESOURCE_ID_IMAGE_50N);
+        } else {
+                APP_LOG(APP_LOG_LEVEL_ERROR, "Unknown icon %s", t->value->cstring);
         }
         break;
       default:
