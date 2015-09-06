@@ -19,11 +19,11 @@ function locationSuccess(pos) {
 
     // Temperature is in Kelvin, adjust
     var temperature = Math.round(json.main.temp - 273.15);
-    console.log('Temperature is: '+temperature);
+    //console.log('Temperature is: '+temperature);
 
     // conditions
     var conditions = json.weather[0].main;
-    console.log('Conditions are: '+conditions);
+    //console.log('Conditions are: '+conditions);
 
     var icon = json.weather[0].icon;
     // assemble dictionary using our keys
@@ -56,7 +56,7 @@ function getWeather(){
 
 //listen for when the watchface is opened
 Pebble.addEventListener('ready', function(e){
-  console.log('ready');
+  //console.log('ready');
 
   // get the initial weather
   getWeather();
@@ -64,6 +64,6 @@ Pebble.addEventListener('ready', function(e){
 
 //listen for when a message is recieved
 Pebble.addEventListener('appmessage', function(e){
-  console.log('recieved appmessage');
+  //console.log('recieved appmessage');
   getWeather();
 });

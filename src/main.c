@@ -21,6 +21,7 @@ static GFont s_time_font_48;
 static GRect s_bounds;
 static int battery_radius = 4;
 static int red, green, blue = 0;
+static int bat_width = 0;
 
 //=====================================
 // update routines
@@ -60,12 +61,11 @@ static void battery_update_proc(Layer *layer, GContext *ctx){
  GRect bounds = layer_get_bounds(layer);
 
   // find width of bar - nb 114.0 is the width we defined for the layer
-  int width = (int)(float)(((float)s_battery_level / 100.0F) * bounds.size.w);
+  int width = (int)(float)(((float)s_battery_level / 100.0F) * (float)bat_width);
 
-
+  // decide on colour of bar, default ot green
   GColor8 colour = GColorGreen;
 
-  // draw the background
   if (s_battery_level < 50){
     if (s_battery_level > 25){
       colour =  GColorYellow;
@@ -74,6 +74,7 @@ static void battery_update_proc(Layer *layer, GContext *ctx){
     }
   }
 
+  // draw the background
   graphics_context_set_fill_color(ctx, GColorBlack);
   graphics_fill_rect(ctx, bounds, battery_radius, GCornersAll);
 
@@ -131,6 +132,8 @@ static void buildBatteryDisplay(Window *window){
   // create battery meter layer;
   s_battery_layer = layer_create(GRect(25, 7, s_bounds.size.w - 50, 12));
   layer_set_update_proc(s_battery_layer, battery_update_proc);
+  bat_width = layer_get_bounds(s_battery_layer).size.w - 4; //trim for borders
+  //APP_LOG(APP_LOG_LEVEL_INFO, "Battery width %d", bat_width);
 
   // Add to window
   layer_add_child(s_root_layer, s_battery_layer);
@@ -350,7 +353,7 @@ static void outbox_sent_callback(DictionaryIterator *iterator, void *context){
 // initiliase/tear down
 static void init() {
   // register with the time service
-  tick_timer_service_subscribe(MINUTE_UNIT, tick_handler);
+  tick_timer_service_subscribe(SECOND_UNIT, tick_handler);
 
   //register for battery info updates
   battery_state_service_subscribe(battery_callback);

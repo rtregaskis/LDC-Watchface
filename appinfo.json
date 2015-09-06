@@ -1,17 +1,33 @@
 {
     "appKeys": {
-        "KEY_ICON": 2,
         "KEY_CONDITIONS": 1,
+        "KEY_ICON": 2,
         "KEY_TEMPERATURE": 0
     },
     "capabilities": [
-        "location"
+        "location",
+        "configurable"
     ],
     "companyName": "lokidokicoki@gmail.com",
     "longName": "LDC Simple",
     "projectType": "native",
     "resources": {
         "media": [
+            {
+                "file": "images/10n.png",
+                "name": "IMAGE_10N",
+                "type": "png"
+            },
+            {
+                "file": "images/10d.png",
+                "name": "IMAGE_10D",
+                "type": "png"
+            },
+            {
+                "file": "images/02d.png",
+                "name": "IMAGE_02D",
+                "type": "png"
+            },
             {
                 "characterRegex": "[:0-9]",
                 "file": "fonts/ProFontWindows.ttf",
@@ -24,13 +40,33 @@
                 "type": "png"
             },
             {
-                "file": "images/01d.png",
-                "name": "IMAGE_01D",
+                "file": "images/02n.png",
+                "name": "IMAGE_02N",
                 "type": "png"
             },
             {
-                "file": "images/02d.png",
-                "name": "IMAGE_02D",
+                "file": "images/11d.png",
+                "name": "IMAGE_11DN",
+                "type": "png"
+            },
+            {
+                "file": "images/09d.png",
+                "name": "IMAGE_09DN",
+                "type": "png"
+            },
+            {
+                "file": "images/50d.png",
+                "name": "IMAGE_50DN",
+                "type": "png"
+            },
+            {
+                "file": "images/charge.png",
+                "name": "IMAGE_CHARGE",
+                "type": "png"
+            },
+            {
+                "file": "images/bt-icon.png",
+                "name": "IMAGE_BT_ICON",
                 "type": "png"
             },
             {
@@ -44,53 +80,19 @@
                 "type": "png"
             },
             {
-                "file": "images/09d.png",
-                "name": "IMAGE_09DN",
-                "type": "png"
-            },
-            {
-                "file": "images/10d.png",
-                "name": "IMAGE_10D",
-                "type": "png"
-            },
-            {
-                "file": "images/11d.png",
-                "name": "IMAGE_11DN",
-                "type": "png"
-            },
-            {
                 "file": "images/13d.png",
                 "name": "IMAGE_13DN",
                 "type": "png"
             },
             {
-                "file": "images/50d.png",
-                "name": "IMAGE_50DN",
+                "file": "images/01d.png",
+                "menuIcon": true,
+                "name": "IMAGE_01D",
                 "type": "png"
             },
             {
                 "file": "images/01n.png",
                 "name": "IMAGE_01N",
-                "type": "png"
-            },
-            {
-                "file": "images/02n.png",
-                "name": "IMAGE_02N",
-                "type": "png"
-            },
-            {
-                "file": "images/10n.png",
-                "name": "IMAGE_10N",
-                "type": "png"
-            },
-            {
-                "file": "images/bt-icon.png",
-                "name": "IMAGE_BT_ICON",
-                "type": "png"
-            },
-            {
-                "file": "images/charge.png",
-                "name": "IMAGE_CHARGE",
                 "type": "png"
             }
         ]
