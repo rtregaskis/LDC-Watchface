@@ -156,7 +156,7 @@ static void buildWeatherDisplay(Window *window){
 
   // add it as a child layer to the Window's root layer.
   layer_add_child(s_root_layer, text_layer_get_layer(s_weather_layer));
-  
+
   // 5,100
   // create weather textLayer
   s_conditions_layer = text_layer_create(GRect(5, 100, s_bounds.size.w-10, 30));
@@ -257,7 +257,7 @@ static void main_window_unload(Window* window) {
 // service handlers
 static void tick_handler(struct tm* tick_time, TimeUnits units_changed){
   update_time();
-  layer_mark_dirty(s_timewarp_layer);
+  //layer_mark_dirty(s_timewarp_layer);
   //update weather
   if(tick_time->tm_min % 15 == 0){
     // begin dictionary
