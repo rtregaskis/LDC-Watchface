@@ -8,7 +8,7 @@ enum {
 };
 
 static Window *s_main_window;
-static TextLayer *s_time_layer, *s_date_layer, *s_weather_layer;
+static TextLayer *s_time_layer, *s_date_layer, *s_weather_layer, *s_conditions_layer;
 static int s_battery_level;
 static Layer * s_battery_layer, *s_root_layer, *s_timewarp_layer;
 static BitmapLayer *s_bt_icon_layer;
@@ -121,11 +121,13 @@ static void buildTimeDisplay(Window *window){
   // add it as a child layer to the Window's root layer.
   layer_add_child(s_root_layer, text_layer_get_layer(s_time_layer));
 
+  /*
   s_timewarp_layer = layer_create(GRect(5, 100, s_bounds.size.w - 10, 12));
   layer_set_update_proc(s_timewarp_layer, timewarp_update_proc);
 
   // Add to window
   layer_add_child(s_root_layer, s_timewarp_layer);
+  */
 }
 
 static void buildBatteryDisplay(Window *window){
@@ -154,6 +156,22 @@ static void buildWeatherDisplay(Window *window){
 
   // add it as a child layer to the Window's root layer.
   layer_add_child(s_root_layer, text_layer_get_layer(s_weather_layer));
+  
+  // 5,100
+  // create weather textLayer
+  s_conditions_layer = text_layer_create(GRect(5, 100, s_bounds.size.w-10, 30));
+
+  text_layer_set_background_color(s_conditions_layer, GColorClear);
+  text_layer_set_text_color(s_conditions_layer, GColorBlack);
+
+  // improve the layout to be more like a watchface
+  //text_layer_set_font(s_weather_layer, s_time_font_48);//fonts_get_system_font(FONT_KEY_GOTHIC_24));
+  text_layer_set_font(s_weather_layer, fonts_get_system_font(FONT_KEY_GOTHIC_24_BOLD));
+  text_layer_set_text_alignment(s_conditions_layer, GTextAlignmentCenter);
+  text_layer_set_text(s_conditions_layer, "Loading...");
+
+  // add it as a child layer to the Window's root layer.
+  layer_add_child(s_root_layer, text_layer_get_layer(s_conditions_layer));
 }
 
 static void buildDateDisplay(Window *window){
@@ -219,6 +237,7 @@ static void main_window_unload(Window* window) {
   text_layer_destroy(s_date_layer);
   text_layer_destroy(s_time_layer);
   text_layer_destroy(s_weather_layer);
+  text_layer_destroy(s_conditions_layer);
 
   layer_destroy(s_battery_layer);
   layer_destroy(s_timewarp_layer);
@@ -276,6 +295,7 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
   static char temperature_buffer[8];
   static char conditions_buffer[32];
   static char weather_layer_buffer[32];
+  static char conditions_layer_buffer[32];
 
   // read first item
   Tuple *t = dict_read_first(iterator);
@@ -334,7 +354,9 @@ static void inbox_received_callback(DictionaryIterator *iterator, void *context)
 
   // assemble weather for display
   snprintf(weather_layer_buffer, sizeof(weather_layer_buffer), "%s", temperature_buffer);//, conditions_buffer);
+  snprintf(conditions_layer_buffer, sizeof(conditions_layer_buffer), "%s", conditions_buffer);//, conditions_buffer);
   text_layer_set_text(s_weather_layer, weather_layer_buffer);
+  text_layer_set_text(s_conditions_layer, conditions_layer_buffer);
 }
 
 static void inbox_dropped_callback(AppMessageResult reason, void *context){

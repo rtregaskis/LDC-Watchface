@@ -22,7 +22,7 @@ function locationSuccess(pos) {
     //console.log('Temperature is: '+temperature);
 
     // conditions
-    var conditions = json.weather[0].main;
+    var conditions = json.weather[0].description;
     //console.log('Conditions are: '+conditions);
 
     var icon = json.weather[0].icon;
